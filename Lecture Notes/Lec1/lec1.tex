@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
-\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
 
 %packages
 \usepackage{amsmath}
@@ -12,6 +13,8 @@
 
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\asteq}{\mathrel{*}=}
 
 \usepackage[dvipsnames]{xcolor}
 
@@ -30,41 +33,81 @@
 \subsection*{\centering{\emph{Lecture 1 \& 2}}}
 
 \section{\hl{Supervised Learning} (lecture 1)}
-Def: \hl{\emph{model}}; a model is some structure that uses parameters to perform a function. An example of a model is $y= Wx + b$, which is a linear model. Technically speaking, we should write a linear model as (refer to \ref{section:linearconvention} for more info):
-\[\hat{y} = \sum_{j=1}^{m}{w_j \cdot X_j + b} = xW^{T} + b\]
-The intuition is that, \hlinfo{the parameters (i.e. $W$ and $b$) can be changed based off the data so that the model performs the correct function/prediction/output}. Note that $X$ is the input and the output is $y$. Also note that this assumes there is a linear relationship between the input and output, which is not the case all the time. Therefore, a model can be any polynomial or non-polynomial function. We can think of a machine learning model as a mathematical function, $F$, with 1 or more inputs likeso:
+Def: \hl{\emph{model}}; a model is some structure that uses parameters to perform a function. An example of a model is $y= wx + b$, which is a linear model. Technically speaking, we should write a linear model as (refer to \ref{section:linearconvention} for more info):
+\[\hat{y} = \sum_{j=1}^{m}{w_j \cdot X_j + b} = XW^{T} + b\]
+where we have a weight, $w_j$ for each feature $X_j$, with a bias term, $b$, and an output vector $\hat{y}$. 
 
-\[\hat{y} = F(X_1, ..., X_m)\]
+The intuition is that, \hlinfo{the parameters (i.e. $W$ and $b$) can be changed based off the data so that the model performs the optimal function/prediction/output}. We say that the model learns because it is able learn the right combination of $W$ and $b$ to give an optimal output (global optimal is not guraneed; more info next lecture). The weights, $w_j$, determines how important a feature $x_j$ is to the optimal solution of $\hat{y}$. We can think of a machine learning model as a mathematical function, $F$, with 1 or more features likeso:
 
-For example, the inputs of a weather model can be the humidity, temperature, air speed, etc. And the output could be whether it will rain (regression model) or a probability distributon of what the weather will be like (classification model). In a regression model the output $y \in \mathbb{R}$ while the output of a classification model is a probability distribution. A classification model with 2 classes is a binary classification model, a model with more than 2 classes is a multi-class classificatiton model. \\
+\[\hat{y} = F(X_1, ..., X_m) = w_1 X_1 + ... + w_m X_m + b\]
+
+For example, the inputs of a weather model can be the humidity, temperature, air speed, etc. And the output could be how much it will rain (\emph{regression model}) or a probability distributon of what the weather will be like (\emph{classification model}). In a regression model the output $y \in \mathbb{R}$ while the output of a classification model is a probability distribution $Y \sim p(x)$. A classification model with 2 classes is a binary classification model, a model with more than 2 classes is a multi-class classificatiton model. \\
 
 Def: \hl{\emph{supervised learning}}; when we can train a model with labeled data. For example, given an image of a dog the label will be ``dog''. Formally, we can express this as:
 % https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html
 
 \[D= \{(x_1, y_1), ..., (x_n, y_n)\}\]
 
-where $D$ represents our dataset, $x_i$ is the input vector to the $i^{\text{th}}$ sample and $y_i$ is the corresponding label to the $i^{\text{th}}$ sample. Note that, we call $x_i$ the input vector because we can only pass in numbers. For example, an RGB image would be a vector of size $(H \times W \times 3)$. Similarly, the output has to be a vector and cannot be something like the label ``dog''. We need encode the label using a technique such as \emph{one-hot encoding} for categorical data or Universal Sentence Encoder (USE) for sentences in NLP. Ultimately, \hlinfo{our goal in supervised learning is to learn a function $F$ such that for a new pair of data $(x, y)$, we have $F(x) \approx y$ with high probability.}
+where $D$ represents our dataset, $x_i$ is the input vector to the $i^{\text{th}}$ sample and $y_i$ is the corresponding label to the $i^{\text{th}}$ sample. Note that, we call $x_i$ the input vector because we can only pass in numbers. For example, an RGB image would be a matrix of size $(H \times W \times 3)$. Similarly, the output has to be a vector and cannot be something like the label ``dog''. We need encode the label using a technique such as \emph{one-hot encoding} for categorical data or Universal Sentence Encoder (USE) for sentences in NLP. Ultimately, \hlinfo{our goal in supervised learning is to learn a function $F$ such that for a new pair of data $(x, y)$, we have $F(x) \approx y$ with high probability.}
 
-\subsection{\hl{Linear Models and Why $\hat{y} = xW^{T} + b$?}}
+\subsection{\hl{Linear Models and Why $\hat{y} = XW^{T} + b$?}}
 \label{section:linearconvention}
 
-In actuality, $W, x, b,$ and $\hat{y}$ are all matrices. 
+Naively, we can implement a linear model using the algorithm:
+\begin{algorithm}
+    \caption{Naive Linear Model}
+    \begin{algorithmic}[1]
+        \State{$y=b$}
+        \For{$j$ in range($m$)}
+            \State{$y \pluseq w_j \ast x_j$} \Comment{simple scalar multiplication}
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
 
-%https://pytorch.org/docs/master/generated/torch.nn.Linear.html
+However, this is a very ugly implementation and For-loops in Python are slow. Instead, we want to express them in terms of matrices. Generally we want $X$ to have shape $(n \times m)$ where $n$ is the number of data and $m$ is the number of features (i.e each row/data has $m$ features), therefore a $(m \times n)$ shape would not make sense. We also want the output to have shape $(n \times p)$ where $p$ are the predictions (i.e. each row/data has $p$ predictions). The problem with $W^TX$ is that we need to transpose the $X$ matrice which does not make sense to do so:
+\[(?, ?) \times (n, m) \rightarrow (n, p)\]
+Instead, writing it as $XW^T$ makes more sense:
+\[(n,m) \times (?,?) \rightarrow (n,p)\]
+where, the weight matrice can now have shape $(m,p)$. However, we want to represent the weight matrice as shape $(p,m)$ as it is equivalent to saying ``a prediction $p$ can be made if given $m$ features''. Therefore, the dimensions of $X$, $W$, and output will be:
 
-The typical linear (fully connected) layer in torch uses input features of shape (N,$\ast$,in\_features) and weights of shape (out\_features,in\_features) to produce an output of shape (N,$\ast$,out\_features). Here N is the batch size, and $\ast$ is any number of other dimensions (may be none). 
+\begin{itemize}
+    \item {$W \rightarrow (p,m)$}
+    \item {$X \rightarrow (n,m)$}
+    \item {Out $\rightarrow (n,p)$}
+\end{itemize}
 
-Computing derivative for this is easier than 
-
+We can see this convention being adopted by Pytroch (torch.nn.Linear)\footnote{https://pytorch.org/docs/master/generated/torch.nn.Linear.html}. Another reason why we want to represent $W$ and $X$ as matrices is because it's easier to differentiate (more important later). 
 
 \section{\hl{Regression} (lecture 1)}
 
 \subsection{\hl{Linear Regression}}
 
-If we have a linear model (i.e. $y=Wx+b$) finding the particular parameters ($W$ and $b$) for this linear function is called linear regression. We can think of linear regression as the line of best fit. 
+If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($W$ and $b$) for this linear function is called linear regression. We can think of linear regression as the line of best fit. 
 
 \section{\hl{Loss Function} (lecture 2)}
 
+Def: \hl{\emph{loss function}}; measures how \emph{poor} the model is performing. The lower the loss, the better. A loss of zero means it makes perfect predictions. An example of a well-known loss function is the \hlinfo{\emph{Mean Absolute Error (MAE)}} and can be written formally as:
+\[\text{MAE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{y_n - \hat{y}_n'}\]
+where $y_n$ is the $n^{\text{th}}$ label in the data and $\hat{y}_n'$ is the output of the model when given the $n^{\text{th}}$ data, $x_n$. Another loss function is the \hlinfo{\emph{Mean Square Error (MSE)}} and can be written formally as:
+\[\text{MSE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{(y_n - \hat{y}_n')^2}\]
+\hlinfo{The MAE will prefer outliers while MSE will prefer none to be extremely far}. It is common practice to normalize the loss by the total number of training samples, $n$, so that the output can be interpreted as the average loss per sample [Cornell CS4780, Lecture 1, Fall 2018].
+
+% \footnote{https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html}. 
+
+\subsection{\hl{Properties of the Loss Function}}
+
+\begin{enumerate}
+    \item {The minimal loss value should correspond to the line of best fit}
+    \item {The loss must be defined for all outputs and labels (no divide by 0)}
+    \item {The loss function should be differentiable (for gradient descent)}
+\end{enumerate}
+
 \section{\hl{Gradient Descent} (lecture 2)}
 
+Gradient of loss, $\nabla$Loss, is the \hlinfo{\emph{direction of steepest ascent}}. The negative gradient of loss, $-\nabla$Loss, is the direction of steepest descent. Taking a small enough step, $\alpha$ in the negative gradient is guranteed to reduce loss and eventually converege to an optimal model. The step size, $\alpha$, is also known as the \hlinfo{\emph{learning rate}} is a hyperparameter. Formally, we can write all of this as:
+\[W_i = W_i - \alpha \frac{\partial L}{\partial W_i}\]
+
+\subsection{\hl{Gradient with Respect to Weight}}
+Note that to change the output $\hat{y}$, we can only change the parameters $W$ and $b$. Therefore, we are interested in the gradient with respect to both these parameters:
+\[\frac{\partial \text{Loss}}{\partial W} = \left( \frac{\partial L}{\partial W_1}, \frac{\partial L}{\partial W_2}, ..., \frac{\partial L}{\partial W_m} \right)\]
 \end{document}
