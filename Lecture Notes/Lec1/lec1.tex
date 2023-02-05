@@ -120,7 +120,7 @@ where $y_n$ is the $n^{\text{th}}$ label in the data and $\hat{y}_n'$ is the out
 \begin{align}
     \text{MSE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{(y_n - \hat{y}_n')^2}.
 \end{align}
-The MAE will prefer outliers while MSE will prefer none to be extremely far. It is common practice to normalize the loss by the total number of training samples, $N$, so that the output can be interpreted as the average loss per sample [Cornell CS4780, Lecture 1, Fall 2018].
+The MAE will prefer outliers while MSE will prefer none to be extremely far. It is common practice to normalize the loss by the total number of training samples, $N$, so that the output can be interpreted as the average loss per sample \cite{Cornell}.
 
 \end{definition}
 % \footnote{https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html}. 
@@ -192,11 +192,13 @@ Whether we converge to an optimal solution depends on how we set the learning ra
 \begin{thebibliography}{2}
     \bibitem{DrCoop} Cooper.
 
-    \bibitem{UoT} Mengye Ren and Matthew MacKay, UoT CSC 411, Winter 2019.
+    \bibitem{UoT} Mengye Ren and Matthew MacKay, UoT CSC 411, Winter 2019. \url{https://web.archive.org/web/20190513201539/https://www.cs.toronto.edu/~mren/teach/csc411_19s/lec/lec06.pdf}
 
     \bibitem{Cornell} Kilian Q. Weinberger, Cornell CS4780, Fall 2018.
+    \url{https://web.archive.org/web/20180827054501/https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html}
+     \url{https://web.archive.org/web/20181016051558/https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote07.html}
 
-    \bibitem{Stanford} Fei-Fei Li, Jiajun Wu, and Ruohan Gao, Stanford CS231n, Spring 2022.
+    \bibitem{Stanford} Fei-Fei Li, Jiajun Wu, and Ruohan Gao, Stanford CS231n, Spring 2022. \url{https://web.archive.org/web/20230109135558/https://cs231n.github.io/optimization-1/}
 
 \end{thebibliography}
 
