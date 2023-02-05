@@ -808,6 +808,7 @@ INPUT .\Figs\lr_diverge.jpg
 INPUT .\Figs\lr_diverge.jpg
 INPUT .\Figs\lr_diverge.jpg
 INPUT .\Figs\lr_diverge.jpg
+INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt10.tfm
 INPUT lec1.aux
 INPUT .\lec1.out
 INPUT .\lec1.out
@@ -845,6 +846,8 @@ INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
+INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
+INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt9.pfb
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt9.pfb
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
