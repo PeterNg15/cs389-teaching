@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 
-\usepackage[letterpaper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage[letterpaper,top=1.8cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
 
 %packages
 \usepackage{amsmath}
@@ -45,8 +45,12 @@
 \begin{document}
 
 \noindent
-\section*{\centering{CS389 - Week 1 Notes}}
-\subsection*{\centering{\emph{Lectures 1 \& 2}}}
+\begin{center}
+    \section*{\centering{Week 1 Notes}}
+    \subsection*{\centering{\emph{Lectures 1 \& 2}}}
+    \emph{University of Massachusetts, Amherst}, CS389
+\end{center}
+
 
 \section{Supervised Learning (lecture 1)}
 \begin{definition}[Model]
@@ -167,7 +171,7 @@ Whether we converge to an optimal solution depends on how we set the learning ra
     \subfloat[\centering $\alpha$ is just right]{{\includegraphics[width=8cm]{./Figs/lr_converge.jpg} }}%
     \qquad
     \subfloat[\centering $\alpha$ is too large]{{\includegraphics[width=7cm]{./Figs/lr_diverge.jpg} }}%
-    \caption{Consequence of choosing $\alpha$, [Cornell CS4780, Lecture 7, Fall 2018]}%
+    \caption{Consequence of choosing $\alpha$, \cite{Cornell}}%
     \label{fig:learningrate_example}%
 \end{figure}
 
