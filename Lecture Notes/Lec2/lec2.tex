@@ -56,7 +56,7 @@
 
 \section{Neural Networks (lecture 3)}
 
-\begin{definition}[Multi-dimensional data] A \emph{multi-dimensional data} has $n$ number of data and $d$ number of features and can be written as\footnote{Note that this array is transposed because $X$ is a row vector and each $X^{(i)}$ is a d-dimensional column vector}:
+\begin{definition}[Multi-dimensional data] A \emph{multi-dimensional data} that has $n$ number of data with $d$ number of features can be written as\footnote{Note that this array is transposed because $X$ is a row vector and each $X^{(i)}$ is a d-dimensional column vector}:
     \begin{align}
         X = \left [ X^{(1)}, X^{(2)}, ..., X^{(n)} \right ]^{T}
     \end{align}
@@ -66,7 +66,7 @@ where $X^{(i)}$ is the $i^{\text{th}}$ data\footnote{The reason why we use the $
     \end{align}
 Putting all this together, our multi dimensional data is a matrix with dimensions $(n \times d)$:
     \begin{align}
-        \begin{bmatrix}
+        X = \begin{bmatrix}
             X_{1}^{(1)} & \cdots & X_{d}^{(1)} \\
             \vdots & \ddots & \vdots \\
             X_{1}^{(n)} & \cdots & X_{d}^{(n)} 
@@ -78,7 +78,7 @@ Putting all this together, our multi dimensional data is a matrix with dimension
 
 \subsection{Perceptron}
 \begin{definition}[Perceptron]
-    
+    A \emph{perceptron} is a computational model of a biological neuron. A graphical visualization of a perceptron can be seen in \autoref{fig:perceptron},
 \end{definition}
 
 \begin{figure}[h]
@@ -112,7 +112,7 @@ Putting all this together, our multi dimensional data is a matrix with dimension
     \label{fig:perceptron}
 \end{figure}
 
-where the vertices $X_i$ are the inputs, the edges $W_i$ are the weighted connections, the vertex $b$ is the bias term, and the vertex $Y'$ is the output. We can be write this mathematically as:
+where the vertices $X_i$ are the input features, the edges $W_i$ are the weighted connections, the vertex $b$ is the bias term, and the vertex $Y'$ is the output. We can be write this mathematically as:
 \begin{align}
     Y' = \phi(W^{T}X + b)
 \end{align}
@@ -158,17 +158,17 @@ As can be seen in \autoref{fig:linear_classifier}, the points that are on the sa
     \emph{If the dataset, $D$, is linearly separable, then the perceptron algorithm is guaranteed to find a linear separator} \cite{MIT}
 \end{theorem}
 
-How would one \emph{formally describe linear separabilty?} This is beyond the scope for this class, but you can refer to this \href{https://openlearninglibrary.mit.edu/assets/courseware/v1/8f4f9aca5581dde50291b0d0e29d0148/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_The_Perceptron.pdf}{MIT lecture notes} for a detailed explanation. The intuition is if the shortest distance of a point to the hyperplane (the norm) is positive for all points then the dataset is classifed correctly. You can use \autoref{fig:linear_classifier} to help with this visualization.
+How would one \emph{formally describe linear separability?} This is beyond the scope for this class, but you can refer to this \href{https://openlearninglibrary.mit.edu/assets/courseware/v1/8f4f9aca5581dde50291b0d0e29d0148/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_The_Perceptron.pdf}{MIT lecture notes (pg. 4)} for a detailed explanation. The intuition is if the shortest distance of a point to the hyperplane (the norm) is positive for all points then the dataset is classified correctly. You can use \autoref{fig:linear_classifier} to help with this visualization. Understanding this helps us understand why the perceptron is unable to solve XOR.
 
 \subsection{Regression}
 
 \begin{definition}[Regression]
-    Predict continous outputs ($\hat{y} \in \mathbb{R}$) that are close to the true values
+    Predict continuous outputs ($\hat{y} \in \mathbb{R}$) that are close to the true values
 \end{definition}
 
 \section{Stochastic Gradient Descent implementation (lecture 4)}
 
-Hopefully, we now have a mathematical understanding and an intuition of all the main components of a supervised machine learning model. We can now start implementing a very simple SGD. Recall that in a SGD, we want to update the parameters $W$ and $b$ after every single training data. 
+Hopefully, we now have a mathematical understanding and an intuition of all the main components of a supervised machine learning model. We can now start implementing a very simple SGD. Recall that in a SGD, we want to update the parameters $W$ and $b$ after every single training data.
 
 % SGD algorithm
 \begin{algorithm}
@@ -178,7 +178,7 @@ Hopefully, we now have a mathematical understanding and an intuition of all the 
             \For{$X^{(i)}$ in $X$} \Comment{loop through entire dataset}
                 \State{$\hat{y}^{(i)} = F_{W}(X^{(i)}) = X^{(i)}W^{T} + b$} \Comment{our model's prediction for input $X^{(i)}$}
                 \State{Loss$^{(i)} =$ MSE$(y^{(i)}, \hat{y}^{(i)}) = \frac{1}{2} \sum{(y^{(i)} - \hat{y}^{(i)})^{2}}$ } \Comment{calculate loss of prediction with actual}
-                \State{$W = W - \alpha \nabla_W \text{Loss}^{(i)}$} \Comment{update weight}
+                \State{$W = W - \alpha \nabla_W \text{Loss}^{(i)} = W - \alpha (X^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}))$}   \Comment{update weight}
                 \State{$b = b - \alpha \nabla_b \text{Loss}^{(i)}$} \Comment{update bias}
             \EndFor
         \EndFor
@@ -198,11 +198,18 @@ Using the chain rule we have:
 \end{align}
 Now recall that $\hat{y} = W^{T}X + b$ and $L = \frac{1}{2} \sum{(y^{(i)} - \hat{y}^{(i)})^{2}}$ , therefore:
 \begin{align}
-    \frac{d \hat{y}}{dW_1} = X_1
+    \frac{\partial \hat{y}}{\partial W_1} = X_1^{(i)}
 \end{align}
 \begin{align}
-    \frac{d \hat{y}}{db} = 1
+    \frac{\partial \hat{L}}{\partial \hat{y}} = \hat{y}^{(i)} - y^{(i)}
 \end{align}
+\begin{align}
+    \nabla_W \text{Loss} = \frac{\partial L}{\partial W} = \left[ X_1^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}), X_2^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}), ..., X_n^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}) \right]
+\end{align}
+\begin{align}
+    \therefore \nabla_W \text{Loss} = X^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)})
+\end{align}
+
 
 \begin{thebibliography}{2}
     \bibitem{DrCoop} Cooper.
