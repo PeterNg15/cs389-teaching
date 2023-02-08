@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1675643188 "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" "lec1.pdf" "lec1" 1675643191
+["pdflatex"] 1675819401 "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" "lec1.pdf" "lec1" 1675819404
   "C:/Users/PeterNg/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1675106754 80937 91001db6d4ae332437b4b739862cda02 ""
   "C:/Users/PeterNg/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1095.pk" 1665032263 12668 cc8ba6d4956b4b86401eb2ef86c85337 ""
   "C:/Users/PeterNg/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1643486774 10244413 6f29d7d7ffced9ecc4d022246ecc2028 ""
@@ -128,10 +128,10 @@
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1636284872 56029 3f7889dab51d620aa43177c391b7b190 ""
   "Figs/lr_converge.jpg" 1675121145 577868 7fa0baaf587da50c03e4f1f8cabeab67 ""
   "Figs/lr_diverge.jpg" 1675121152 326362 d6b5aec7f2a0a81242a039908afe9be3 ""
-  "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" 1675643187 14045 02432b23d22f77c707b14587548f7117 ""
-  "lec1.aux" 1675643191 2427 53da6b3ff1af40991da9ee27fcdab92f "pdflatex"
-  "lec1.out" 1675643191 1455 05d441fe02ed396dcf614a0d37801e99 "pdflatex"
-  "lec1.tex" 1675643187 14045 02432b23d22f77c707b14587548f7117 ""
+  "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" 1675819400 15629 b30dfa5a916a89404eacc7eddabfb122 ""
+  "lec1.aux" 1675819404 2503 2381abe81a036e8cc55027599f45ac77 "pdflatex"
+  "lec1.out" 1675819404 1455 05d441fe02ed396dcf614a0d37801e99 "pdflatex"
+  "lec1.tex" 1675819400 15629 b30dfa5a916a89404eacc7eddabfb122 ""
   (generated)
   "lec1.aux"
   "lec1.log"

@@ -194,11 +194,11 @@ We define the gradient of loss as $\nabla_W \text{Loss}$, which can also be writ
 \end{align}
 Using the chain rule we have:
 \begin{align}
-    \frac{\partial L}{\partial W_i} = \frac{\partial \hat{y}}{\partial W_i} \frac{\partial L}{\partial \hat{y}}
+    \frac{\partial L}{\partial W_j} = \frac{\partial \hat{y}}{\partial W_j} \frac{\partial L}{\partial \hat{y}}
 \end{align}
 Now recall that $\hat{y} = W^{T}X + b$ and $L = \frac{1}{2} \sum{(y^{(i)} - \hat{y}^{(i)})^{2}}$ , therefore:
 \begin{align}
-    \frac{\partial \hat{y}}{\partial W_1} = X_1^{(i)}
+    \frac{\partial \hat{y}}{\partial W_j} = X_j^{(i)}
 \end{align}
 \begin{align}
     \frac{\partial \hat{L}}{\partial \hat{y}} = \hat{y}^{(i)} - y^{(i)}

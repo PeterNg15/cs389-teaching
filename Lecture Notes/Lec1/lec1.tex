@@ -17,6 +17,7 @@
 % Edits by John:
 % Use hyperref when you're referencing anything - in particular, use the \autoref{} command - it's great. One exception: anything in mathmode should be referenced using \eqref{} instead; \autoref{} calls all mathmode objects "equations", even when they're not equations (definitions, inequalities, propositions, statements, etc.), so it's better to use the \eqref{} function.
 \usepackage[colorlinks, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\newcommand{\algorithmautorefname}{Algorithm}
 % Use the align (or similar) environment, rather than built-in latex commands for math statements. That way, things can be aligned properly and equations will be numbered and referencable. The equation below assigns equation numbers based upon the current section.
 
 \numberwithin{equation}{section}
@@ -48,11 +49,13 @@
 \begin{center}
     \section*{\centering{Week 1 Notes}}
     \subsection*{\centering{\emph{Lectures 1 \& 2}}}
-    \emph{University of Massachusetts, Amherst}, CS389
+    \emph{University of Massachusetts Amherst}, CS389
 \end{center}
 
-
 \section{Supervised Learning (lecture 1)}
+\begin{definition}[Machine Learning]
+    A program, $p$, is able to perform a task, $t$, better according to some metric, $m$, when given experience, $e$. (Mitchell, 1997)
+\end{definition}
 \begin{definition}[Model]
 A \emph{model} is some structure that uses parameters to define a function. An example of a model is $y= wx + b$, which is a linear model. In another more explicit notation, we might write a linear model as (refer to \autoref{section:linearconvention} for more info):
 \begin{align}
@@ -78,7 +81,7 @@ where $x_i$ is the input vector to the $i^{\text{th}}$ sample and $y_i$ is the c
 
 \subsection{Why $\hat{y} = XW^{T} + b$?}
 \label{section:linearconvention}
-Naively, we can implement a linear model using the algorithm:
+Naively, we can implement a linear model using \autoref{alg:linear_model}. 
 \begin{algorithm}
     \caption{Naive Linear Model}
     \begin{algorithmic}[1]
@@ -87,8 +90,8 @@ Naively, we can implement a linear model using the algorithm:
             \State{$y \pluseq w_j \ast x_j$} \Comment{scalar multiplication}
         \EndFor
     \end{algorithmic}
+    \label{alg:linear_model}
 \end{algorithm}
-
 However, this is a very ugly implementation and for-loops in Python are slow. For our implementation, it would be better to express the operation using matrices. Generally we want $X$ to have shape $(n \times m)$ where $n$ is the number of data and $m$ is the number of features (i.e each row/data has $m$ features), therefore a $(m \times n)$ shape would not make sense. We also want the output to have shape $(n \times p)$ where $p$ are the predictions (i.e. each row/data has $p$ predictions). The problem with $W^TX$ is that we need to transpose the $X$ matrix which does not make sense to do so:
 \begin{align}
     (?, ?) \times (n, m) \rightarrow (n, p).
@@ -110,17 +113,21 @@ We can see this convention being adopted by Pytroch (torch.nn.Linear)\footnote{\
 \section{Regression (lecture 1)}
 \begin{definition}[Linear Regression]
 
-If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($W$ and $b$) for this linear function is called \emph{linear regression}. We can think of linear regression as the line of best fit. 
+If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($W$ and $b$) for this linear function is called \emph{linear regression}. You may recall procedures for finding the line of best fit from a previous course - this is the same process, in an arbitrary dimension.
 \end{definition}
 
 \section{Loss Function (lecture 2)}
-
+% John: In this section, I adjusted the parentheticals for MAE and MSE; you're using those as mathematical symbols,  and in your mathematics, they are (as they should be) upright. As a result, you should avoid accidentally italicizing them.
+% Relatedly, if I were you I would implement the following scheme:
+% \newcommand{\MAE}{\text{MAE}}
+% \newcommand{\MSE}{\text{MSE}}
+% Schemes like this help you to remain consistent in your notation, and make it easier to modify if needed.
 \begin{definition}[Loss Function]
-A \emph{loss function} measures how \emph{poor} the model is performing. The lower the loss, the better. A loss of zero means it makes perfect predictions. An example of a well-known loss function is the \emph{Mean Absolute Error (MAE)} and can be written formally as:
+A \emph{loss function} measures how \emph{poorly} the model is performing. The lower the loss, the better. A loss of zero means it makes perfect predictions. An example of a well-known loss function is the \emph{Mean Absolute Error} (MAE) and can be written formally as:
 \begin{align}
     \text{MAE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{y_n - \hat{y}_n'},
 \end{align}
-where $y_n$ is the $n^{\text{th}}$ label in the data and $\hat{y}_n'$ is the output of the model when given the $n^{\text{th}}$ data, $x_n$. Another loss function is the \emph{Mean Square Error (MSE)} and can be written formally as:
+where $y_n$ is the $n^{\text{th}}$ label in the data and $\hat{y}_n'$ is the output of the model when given the $n^{\text{th}}$ data, $x_n$. Another loss function is the \emph{Mean Square Error} (MSE) and can be written formally as:
 \begin{align}
     \text{MSE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{(y_n - \hat{y}_n')^2}.
 \end{align}
@@ -141,11 +148,15 @@ Therefore, an ideal loss function, $L(w)$, is convex, continuous, and differenti
 
 \section{Gradient Descent (lecture 2)}
 
+% John: You should pick either $L$ or Loss for your loss function notation (I would prefer $L$). Using both has the potential to be very confusing. If you're unsure of which to use, converting it to a macro such as
+% \newcommand{\Loss}{L}
+% would enable you write your mathematics more fluidly.
+
 In the previous section, we described two common loss functions that describes how poor the model is performing. Our goal is to find the optimal set of parameters that minimizes the loss:
-\begin{align}
-    W^{\ast} = \text{arg min}_{W} L(W)
-\end{align}
-This is evidently an optimization task and this is exactly the purpose of \emph{gradient descent} (more about this in a bit), also known as batch gradient descent. There are other ways of performing optimization (i.e. LBFGS) but gradient descent is the most common and established way of optimizing Neural Network loss functions \cite{Stanford}.
+\begin{align}% use \arg and \min - two reasons: 1) they are standard, and 2) they are ``math operators''; this affects the way that other commands interact with them. If you ever want something to interact this way (e.g. have super and subscripts go above and below rather than to the right), use \mathop{\symbol}
+    W^{\ast} = \arg \min_{W} L(W)
+\end{align}% John: Gradient descent is an algorithm independent of computer science and is not synonymous with batch gradient descent. I've adjusted the wording here accordingly.
+Clearly, this is an optimization task. The most common tool for finding the optimum in a problem such as this is known as \emph{gradient descent}. There are other ways of performing optimization (i.e. LBFGS) but gradient descent is the most common and established way of optimizing Neural Network loss functions \cite{Stanford}.
 
 \begin{definition}[Gradient of Loss]
     The \emph{gradient of loss}, $\nabla$Loss, is the \emph{direction of steepest ascent}. The negative gradient of loss, $-\nabla$Loss, is the direction of steepest descent. The gradient of loss with respect to the weight can be written as:
@@ -171,7 +182,7 @@ Whether we converge to an optimal solution depends on how we set the learning ra
     \subfloat[\centering $\alpha$ is just right]{{\includegraphics[width=8cm]{./Figs/lr_converge.jpg} }}%
     \qquad
     \subfloat[\centering $\alpha$ is too large]{{\includegraphics[width=7cm]{./Figs/lr_diverge.jpg} }}%
-    \caption{Consequence of choosing $\alpha$, \cite{Cornell}}%
+    \caption{Consequence of choosing $\alpha$ \cite{Cornell}}%
     \label{fig:learningrate_example}%
 \end{figure}
 

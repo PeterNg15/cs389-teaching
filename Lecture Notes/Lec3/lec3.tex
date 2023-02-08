@@ -1,0 +1,117 @@
+\documentclass[11pt]{article}
+
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{color,soul}
+\usepackage{mathtools}
+% \usepackage{subfig}
+\usepackage{subcaption}
+\usepackage{caption}
+
+% Edits by John:
+% Use hyperref when you're referencing anything - in particular, use the \autoref{} command - it's great. One exception: anything in mathmode should be referenced using \eqref{} instead; \autoref{} calls all mathmode objects "equations", even when they're not equations (definitions, inequalities, propositions, statements, etc.), so it's better to use the \eqref{} function.
+\usepackage[colorlinks, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+% Use the align (or similar) environment, rather than built-in latex commands for math statements. That way, things can be aligned properly and equations will be numbered and referencable. The equation below assigns equation numbers based upon the current section.
+
+\numberwithin{equation}{section}
+% Use the amsthm environents to define theorems, remarks, definitions, etc., with commands of the form \begin{definition}[DEFINITION ITTLE]
+\usepackage{amsthm}% provides the environments
+\theoremstyle{definition}% provides a style for definitions - this affects all downstream \newtheorem statements until \theoremstyle is used again.
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}[section]% numbers definitions within sections
+% The singular of "matrices" is "matrix", not "matrice" - the abnormal singular-plural pair is an importation from Latin.
+% Use \url{} for hyperlinks (I changed the pytorch link). I think this is included in hyperref, but it may be in base LaTeX.
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\asteq}{\mathrel{*}=}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage[many]{tcolorbox}
+
+\definecolor{lavender}{RGB}{214, 111, 208}
+\colorlet{lavender}{lavender!50}
+
+\newcommand{\hlinfo}[1]{{\sethlcolor{lavender}\hl{#1}}}
+\newcommand{\note}[1]{\textcolor{red}{[#1]}}
+
+\usepackage{tikz}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+\noindent
+\begin{center}
+    \section*{\centering{Week 3 Notes}}
+    \subsection*{\centering{\emph{Lectures 5 \& 6}}}
+    \emph{University of Massachusetts Amherst}, CS389
+\end{center}
+
+\section{Multilayer Perceptrons (lecture 5)}
+
+\subsection{Non-linearities}
+
+Examples of non-linearity functions can be refered below
+
+\subsubsection{Sigmoid}
+
+\begin{align}
+    \text{sig}(x) = \frac{1}{1+e^{-x}}
+\end{align}
+
+The derivative is:
+\begin{align}
+    \frac{d}{dx}\text{sig}(x) = \text{sig}(x) \cdot (1-\text{sig}(x))
+\end{align}
+
+\subsubsection{Tanh}
+
+\begin{align}
+    \text{tanh}(x) = \frac{\text{sinh}(x)}{\text{cosh}(x)} = \frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}
+\end{align}
+
+The derivative is:
+\begin{align}
+    \frac{d}{dx} \text{tanh}(x) = 1 - \text{tanh}^{2}(x)
+\end{align}
+
+\subsubsection{ReLU}
+
+\begin{align}
+    \text{ReLU}(x) = \text{max}(0, x)
+\end{align}
+
+Derivative is:
+
+\begin{align}
+    \frac{d}{dx}\text{ReLU}(x) = \begin{cases}
+        0 & x < 0 \\
+        1 & \text{otherwise}
+    \end{cases}
+\end{align}
+
+\section{Backpropagation (lecture 5)}
+
+\begin{tcolorbox}[title=Derivation:,colframe=purple,colback=blue!5!white,arc=0pt,fonttitle=\bfseries]
+    The algebraic system define over operator $\star$ , which is \emph{closed} and \emph{associative} is called SEMIGROUP.
+\end{tcolorbox}
+
+
+\subsection{Code implementation (lecture 6)}
+
+
+
+\begin{thebibliography}{2}
+    \bibitem{DrCoop} Cooper.
+
+\end{thebibliography}
+
+\end{document}
