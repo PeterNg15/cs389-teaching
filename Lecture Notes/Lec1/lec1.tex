@@ -25,8 +25,18 @@
 \usepackage{amsthm}% provides the environments
 \theoremstyle{definition}% provides a style for definitions - this affects all downstream \newtheorem statements until \theoremstyle is used again.
 \newtheorem{definition}{Definition}[section]% numbers definitions within sections
+\newtheorem{remark}{Remark}[section]
 % The singular of "matrices" is "matrix", not "matrice" - the abnormal singular-plural pair is an importation from Latin.
 % Use \url{} for hyperlinks (I changed the pytorch link). I think this is included in hyperref, but it may be in base LaTeX.
+
+\newcommand{\framedbox}[1]{
+    \noindent{\centering\framebox{\parbox{\linewidth - 0.75em}{#1}}\par}\vspace{0.5ex}
+}
+\newcommand{\resource}[1]{
+\framedbox{\textbf{Resource:} #1}
+}
+
+\newcommand{\Loss}{L}
 
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
@@ -42,52 +52,60 @@
 \newcommand{\note}[1]{\textcolor{red}{[#1]}}
 
 \setlength\parindent{0pt}
+\usepackage[many]{tcolorbox}
+
+% Font to make the names smaller
+\font\smallheader=cmr12 at 10pt
 
 \begin{document}
+\title{Lecture Notes\\\vspace{1ex}
+\large Lectures 1 \& 2\\
+\normalsize \emph{CS389: Machine Learning, Spring 2023}\\
+\emph{University of Massachusetts Amherst}}
+\author{\smallheader Phat Nguyen, John Raisbeck, \& Cooper Sigrist}
+\date{\smallheader February 6, 2023\\
+Last Updated: \today}
+\maketitle
 
-\noindent
-\begin{center}
-    \section*{\centering{Week 1 Notes}}
-    \subsection*{\centering{\emph{Lectures 1 \& 2}}}
-    \emph{University of Massachusetts Amherst}, CS389
-\end{center}
 
-\section{Supervised Learning (lecture 1)}
+\section{Supervised Learning (Lecture 1)}
 \begin{definition}[Machine Learning]
-    A program, $p$, is able to perform a task, $t$, better according to some metric, $m$, when given experience, $e$. (Mitchell, 1997)
+    A program, $p$, is able to perform a task, $t$, better according to some metric, $m$, when given experience, $e$.
 \end{definition}
 \begin{definition}[Model]
 A \emph{model} is some structure that uses parameters to define a function. An example of a model is $y= wx + b$, which is a linear model. In another more explicit notation, we might write a linear model as (refer to \autoref{section:linearconvention} for more info):
 \begin{align}
-    \hat{y} = \sum_{j=1}^{m}{w_j \cdot X_j + b} = XW^{T} + b,
+    \hat{y} = \sum_{j=1}^{m}{W_j \cdot X_j + b} = XW^{T} + b,
 \end{align}
-where we have a weight $w_j$ for each feature $X_j$, a bias term $b$, and an output vector $\hat{y}$. 
+where we have a weight $W_j$ for each feature $X_j$, a bias term $b$, and an output vector $\hat{y}$. 
 \end{definition}
 
-The intuition is that, the parameters (i.e. $W$ and $b$) can be changed based off the data so that the model performs the optimal function/prediction/output. We say that the model learns because it is able learn the right combination of $W$ and $b$ to give an optimal output (global optimality is not guaranteed; we will talk more about this in the next lecture). The weights, $w_j$, determines how important a feature $x_j$ is to the $\hat{y}$. When the parameters of a machine learning model are fixed, the model can be viewed as a function, $F$, of input features $X$:
+The intuition is that, the parameters (i.e. $W$ and $b$) can be changed based off the data so that the model performs the optimal function/prediction/output. We say that the model learns because it is able learn the right combination of $W$ and $b$ to give an optimal output (global optimality is not guaranteed; we will talk more about this in the next lecture). The weights, $W_j$, determines how important a feature $X_j$ is to the $\hat{y}$. When the parameters of a machine learning model are fixed, the model can be viewed as a function, $F$, of input features $X$:
 \begin{align}
-    \hat{y} = F(X_1, ..., X_m) = w_1 X_1 + ... + w_m X_m + b.
+    \hat{y} = F(X_1, ..., X_m) = W_1 X_1 + ... + W_m X_m + b.
 \end{align}
 For example, the inputs of a weather model can be the humidity, temperature, air speed, etc., and the output could be \emph{how much} it will rain (a type of model known as a \emph{regression model}) or a probability distribution of \emph{what} the weather will be like (a type of model known as a \emph{classification model}). In a regression model the output $y \in \mathbb{R}$ while the output of a classification model is a probability distribution $Y \sim p(x)$. A classification model with 2 classes is a binary classification model, and a model with 2 or more classes is a multi-class classification model.
 
 \begin{definition}[Supervised Learning]
-A \emph{supervised learning} system is a system in which we can train a model with labeled data. For example, given an image $x_{1}$ the label $y_{1}$ could be ``dog''. A collection of these is a \emph{dataset}, $D$:
+A \emph{supervised learning} system is a system in which we can train a model with labeled data. For example, given an image $x^{(1)}$ the label $y^{(1)}$ could be ``dog''. A collection of these is a \emph{dataset}, $D$:
 % https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html
 \begin{align}
-D= \left\{(x_1, y_1), ..., (x_n, y_n)\right\},
+D= \left\{(x^{(1)}, y^{(1)}), ..., (x^{(n)}, y^{(n)})\right\},
 \end{align}
-where $x_i$ is the input vector to the $i^{\text{th}}$ sample and $y_i$ is the corresponding label to the $i^{\text{th}}$ sample. The goal in supervised learning is to learn a function $F$ such that for a new pair of data $(x, y)$, we have $F(x) \approx y$ with high probability \cite{Cornell}.
+where $x^{(i)}$ is the input vector to the $i^{\text{th}}$ sample and $y^{(i)}$ is the corresponding label to the $i^{\text{th}}$ sample\footnote{The reason why we use the $X^{(i)}$ notation is because $X^{(i)}$ is a vector and sometimes we need to refer to the elements of that vector. We also want to use $x^{(i)}$ so that the convention is consistent}. The goal in supervised learning is to learn a function $F$ such that for a new pair of data $(x, y)$, we have $F(x) \approx y$ with high probability \cite{Cornell}.
 \end{definition}
 
 \subsection{Why $\hat{y} = XW^{T} + b$?}
+
+\resource{If you think you would benefit from a refresher on matrix multiplication, consider this \href{https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:multiplying-matrices-by-matrices/a/multiplying-matrices}{Khan Academy} lesson.}
 \label{section:linearconvention}
-Naively, we can implement a linear model using \autoref{alg:linear_model}. 
+Naively, we could implement a linear model using \autoref{alg:linear_model}. 
 \begin{algorithm}
     \caption{Naive Linear Model}
     \begin{algorithmic}[1]
-        \State{$y=b$}
+        \State{$\hat{y}=b$}
         \For{$j$ in range($m$)}
-            \State{$y \pluseq w_j \ast x_j$} \Comment{scalar multiplication}
+            \State{$\hat{y} \pluseq W_j \ast X_j$} \Comment{scalar multiplication}
         \EndFor
     \end{algorithmic}
     \label{alg:linear_model}
@@ -108,12 +126,12 @@ where the weight matrix can now have shape $(m,p)$. However, we want to represen
     \item {Out $\rightarrow (n,p)$}
 \end{itemize}
 
-We can see this convention being adopted by Pytroch (torch.nn.Linear)\footnote{\url{https://pytorch.org/docs/master/generated/torch.nn.Linear.html}}. Another reason to represent $W$ and $X$ as matrices is that this form is easier to differentiate for gradient descent.
+This is the convention used by Pytroch (torch.nn.Linear)\footnote{\url{https://pytorch.org/docs/master/generated/torch.nn.Linear.html}}. Later in the course, we will see that representing $W$ and $X$ as matrices in form is easier to differentiate for gradient descent.
 
 \section{Regression (lecture 1)}
 \begin{definition}[Linear Regression]
 
-If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($W$ and $b$) for this linear function is called \emph{linear regression}. You may recall procedures for finding the line of best fit from a previous course - this is the same process, in an arbitrary dimension.
+If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($W$ and $b$) for this linear function is called \emph{linear regression}. You may recall procedures for finding the line of best fit from a previous course---this is the same process, in an arbitrary dimension.
 \end{definition}
 
 \section{Loss Function (lecture 2)}
@@ -123,65 +141,75 @@ If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($
 % \newcommand{\MSE}{\text{MSE}}
 % Schemes like this help you to remain consistent in your notation, and make it easier to modify if needed.
 \begin{definition}[Loss Function]
-A \emph{loss function} measures how \emph{poorly} the model is performing. The lower the loss, the better. A loss of zero means it makes perfect predictions. An example of a well-known loss function is the \emph{Mean Absolute Error} (MAE) and can be written formally as:
+A \emph{loss function} measures how \emph{poorly} a model performs. The lower the loss, the better. A loss of zero means it makes perfect predictions. An example of a well-known loss function is the \emph{Mean Absolute Error} (MAE):
 \begin{align}
-    \text{MAE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{y_n - \hat{y}_n'},
+    \text{MAE($y, \hat{y}$)} = \frac{1}{N}\sum_{n}^{N}{y^{(n)} - \hat{y}^{(n)}},
 \end{align}
-where $y_n$ is the $n^{\text{th}}$ label in the data and $\hat{y}_n'$ is the output of the model when given the $n^{\text{th}}$ data, $x_n$. Another loss function is the \emph{Mean Square Error} (MSE) and can be written formally as:
+where $y^{(n)}$ is the $n^{\text{th}}$ label in the data and $\hat{y}^{(n)}$ is the output of the model when given the $n^{\text{th}}$ input, $x^{(n)}$. Another loss function is the \emph{Mean Square Error} (MSE) and can be written formally as:
 \begin{align}
-    \text{MSE($y, \hat{y}'$)} = \frac{1}{N}\sum_{n}^{N}{(y_n - \hat{y}_n')^2}.
+    \text{MSE($y, \hat{y}$)} = \frac{1}{N}\sum_{n}^{N}{(y^{(n)} - \hat{y}^{(n)})^2}.
 \end{align}
-The MAE will prefer outliers while MSE will prefer none to be extremely far. It is common practice to normalize the loss by the total number of training samples, $N$, so that the output can be interpreted as the average loss per sample \cite{Cornell}.
+In general, the line of best fit for the mean absolute error tends to produce models with more outliers than the line of best fit for the mean squared error. It is common practice to normalize the loss by the total number of training samples, $N$, so that the output can be interpreted as the average loss per sample \cite{Cornell}.
 
 \end{definition}
 % \footnote{https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html}. 
 
-\subsection{Properties of the Loss Function}
-
+\begin{remark}[Properties of a Loss Function]
+When configuring a machine learning system to solve a problem, one of the most important issues is determining what loss function to use. Here are some important properties for the success of a loss function.
 \begin{enumerate}
-    \item {The minimal loss value should correspond to the line of best fit}
-    \item {The loss must be defined for all outputs and labels (no divide by 0)}
-    \item {The loss function should be differentiable (for gradient descent)}
+    \item The minimum of the loss function should correspond to the line of best fit,
+    \item The loss should be defined for all outputs and labels, and
+    \item The loss function should be differentiable (for gradient descent).
 \end{enumerate}
 
-Therefore, an ideal loss function, $L(w)$, is convex, continuous, and differentiable.
+% 
+Therefore, an ideal loss function, $\Loss(W)$, is convex, continuous, and differentiable.
+\end{remark}
 
 \section{Gradient Descent (lecture 2)}
 
 % John: You should pick either $L$ or Loss for your loss function notation (I would prefer $L$). Using both has the potential to be very confusing. If you're unsure of which to use, converting it to a macro such as
 % \newcommand{\Loss}{L}
-% would enable you write your mathematics more fluidly.
+% would enable you write your mathematics more fluidly. I see, ok
 
-In the previous section, we described two common loss functions that describes how poor the model is performing. Our goal is to find the optimal set of parameters that minimizes the loss:
+% this is coz Cooper uses grad Loss def but I personally found L to be easier too since it's more consistent with the rest 
+% Ok, I will also add a note to say that grad_loss = L just so ppl can also refer to the slide
+% Cooper is inconsistent, we can just use L - can you refactor all of them to $\Loss$ and then we can let him change it if he really wants to?
+
+\resource{This topic is covered well by many authors, so we won't restrict you to our treatment. In particular, you may want to check out \href{https://www.3blue1brown.com/lessons/gradient-descent}{3Blue1Brown's video}, which Cooper mentioned in class.}
+
+In the previous section, we described two common loss functions that describe how poorly the model performs on a task. Our goal is to find the optimal set of parameters---that is, the parameters which minimize the loss:
 \begin{align}% use \arg and \min - two reasons: 1) they are standard, and 2) they are ``math operators''; this affects the way that other commands interact with them. If you ever want something to interact this way (e.g. have super and subscripts go above and below rather than to the right), use \mathop{\symbol}
-    W^{\ast} = \arg \min_{W} L(W)
+    W^{\ast} = \arg \min_{W} \Loss(W)
 \end{align}% John: Gradient descent is an algorithm independent of computer science and is not synonymous with batch gradient descent. I've adjusted the wording here accordingly.
-Clearly, this is an optimization task. The most common tool for finding the optimum in a problem such as this is known as \emph{gradient descent}. There are other ways of performing optimization (i.e. LBFGS) but gradient descent is the most common and established way of optimizing Neural Network loss functions \cite{Stanford}.
+Clearly, this is an optimization task. The most common tool for finding the optimum in a problem such as this is known as \emph{gradient descent}. There are other ways of performing optimization (e.g. \href{https://pytorch.org/docs/stable/generated/torch.optim.LBFGS.html}{LBFGS}) but gradient descent is the most common and established way of optimizing Neural Network loss functions \cite{Stanford}.
 
 \begin{definition}[Gradient of Loss]
-    The \emph{gradient of loss}, $\nabla$Loss, is the \emph{direction of steepest ascent}. The negative gradient of loss, $-\nabla$Loss, is the direction of steepest descent. The gradient of loss with respect to the weight can be written as:
+    The \emph{gradient of loss}, $\nabla$Loss, is the \emph{direction of steepest ascent}. The negative gradient of loss, $-\nabla$Loss, is the direction of steepest descent. The gradient of loss with respect to the weight vector can be written as:
     \begin{align}
-        \nabla_W \text{Loss} = \frac{\partial L}{\partial W} = \left( \frac{\partial L}{\partial W_1}, \frac{\partial L}{\partial W_2}, ..., \frac{\partial L}{\partial W_m} \right)
+        \nabla_W \text{Loss} = \frac{\partial \Loss}{\partial W} = \left( \frac{\partial \Loss}{\partial W_1},\, \frac{\partial \Loss}{\partial W_2},\, \ldots,\, \frac{\partial \Loss}{\partial W_m} \right)
     \end{align}
 \end{definition}
 
 \begin{definition}[Gradient Descent]
-    Is an optimization algorithm that minimizes the loss $L(W)$. The intuition behind the \emph{gradient descent} algorithm is to iteratively update $W_i$ in the direction of the negative gradient (steepest descent) until we converge to the value $W_i$ that is minimized by $L(W_i)$, which can be denoted as $W_i^{\ast}$.  Taking a small enough step, $\alpha$, in the negative gradient is guranteed to reduce loss and convergence to an optimal model. The step size, $\alpha$, is also known as the \emph{learning rate} is a hyperparameter. Formally, we can write all of this as\footnote{Assume that this model has no bias (i.e. $b=0$) for simplicity}:
+    Gradient descent is an optimization algorithm that minimizes the loss $\Loss(W)$. The intuition behind the \emph{gradient descent} algorithm is to iteratively update $W_i$ in the direction of the negative gradient (the direction of steepest descent) until we converge to the weights $W_i$ which minimize the loss function $\Loss(W_i)$, which can be denoted as $W_i^{\ast}$. By multiplying the negative gradient by a sufficiently small number $\alpha$, we can take a step guaranteed to reduce loss. When these steps are taken repeatedly, it is guaranteed that the process will converge to a minimum. The number $\alpha$ is known as the \emph{learning rate}, and is considered a \emph{hyperparameter}; a parameter which is a part of the learning algorithm, but not a part of the model itself. Then, the gradient descent step is: 
+    % I don't think this footnote is necessary 
+    %\footnote{For simplicity, we assume that this model has no bias term (i.e. assume that $b = 0$.)}:
     \begin{align}
-        W = W - \alpha \nabla_W \text{Loss}  
+        W = W - \alpha \frac{\partial \Loss}{\partial W}
     \end{align}
     \begin{align}
-        W_i = W_i - \alpha \frac{\partial L}{\partial W_i}  
+        W_{i + 1} = W_{i} - \alpha \frac{\partial \Loss}{\partial W_{i}}
     \end{align}
 \end{definition}
 
-Whether we converge to an optimal solution depends on how we set the learning rate $\alpha$. The model is unable to converge if $\alpha$ is too large, and is unable/expensive to converge because $\alpha$ is too small. This is visualized in \autoref{fig:learningrate_example}. Usually $\alpha > 0$ and is some small number. We say the model converges when we see that $\frac{\partial L}{\partial w}$ is minimized ($=0)$ or does not change after each iteration of the gradient descent algorithm.
+Both whether a learning algorithm converges and whether it converges to an optimal solution can depend upon the learning rate; if $\alpha$ is too large, as depicted in \autoref{fig:learningrate_example} (a), taking steps in the direction of the negative gradient which are too large can result in moving further and further away from the optimum. A learning algorithm is said to have converged to a solution if the gradient of loss at the current parameters is 0.
 
 \begin{figure}[h]%
     \centering
-    \subfloat[\centering $\alpha$ is just right]{{\includegraphics[width=8cm]{./Figs/lr_converge.jpg} }}%
+    \subfloat[\centering $\alpha$ is just right]{{\includegraphics[width=0.5\linewidth]{./Figs/lr_converge.jpg} }}%
     \qquad
-    \subfloat[\centering $\alpha$ is too large]{{\includegraphics[width=7cm]{./Figs/lr_diverge.jpg} }}%
+    \subfloat[\centering $\alpha$ is too large]{{\includegraphics[width=0.4\linewidth]{./Figs/lr_diverge.jpg} }}%
     \caption{Consequence of choosing $\alpha$ \cite{Cornell}}%
     \label{fig:learningrate_example}%
 \end{figure}
@@ -193,15 +221,15 @@ Whether we converge to an optimal solution depends on how we set the learning ra
 \end{definition}
 
 \begin{definition}[Batch Gradient Descent]
-    Also known simply as gradient descent, describes a method that updates the parameters ($W$ and $b$) using the \emph{whole training dataset per epoch}. For example, one would use the mean of the gradients of all the training data to update the parameters. However it is wasteful to compute the loss function over the entire training set in order to perform a parameter update only once \cite{Stanford}.
+    \emph{Batch Gradient Descent}, sometimes known simply as gradient descent, describes a method that updates the parameters ($W$ and $b$) using the \emph{entire training dataset} in each step of training. For example, one would use the mean of the gradients of all the training data to update the parameters. %However it is wasteful to compute the loss function over the entire training set in order to perform a parameter update only once \cite{Stanford}.
 \end{definition}
 
 \begin{definition}[Stochastic Gradient Descent]
-    Also known as on-line gradient descent, describes a method that updates the parameters after every \emph{single} training data. When people refer to SGD, they usually refer to minibatch gradient descent approach as it is more commonly used. The stochastic gradient descent is technically a minbatch gradient descent with a batch size of 1. 
+    \emph{Stochastic Gradient Descent}, also known as on-line gradient descent, describes a method that updates the parameters after each piece of training data. Usually, when SGD is mentioned people are not referring to this version, but to the more common \emph{minibatch} gradient descent. The stochastic gradient descent is technically a minibatch gradient descent with a batch size of 1. 
 \end{definition}
 
 \begin{definition}[Minibatch Gradient Descent]
-    Is a method that updates the parameters on every subset with a batch size, $B$, of the training dataset per epoch. The batch size is a hyperparameter which are chosen because of memory constraints. The batch size is usually in powers of 2 because vectorized operations work faster when the inputs is the power of 2 \cite{Stanford}. 
+    \emph{Minibatch Gradient Descent} is a method that updates the parameters on every subset with a batch size, $B$, of the training dataset per learning step. The batch size is a hyperparameter which is usually chosen in view of memory constraints. %The batch size is usually in powers of 2 because vectorized operations work faster when the input is the power of 2 \cite{Stanford}. 
 \end{definition}
 
 \begin{thebibliography}{2}
