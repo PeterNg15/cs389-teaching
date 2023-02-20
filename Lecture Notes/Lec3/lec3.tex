@@ -32,6 +32,7 @@
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \newcommand{\pluseq}{\mathrel{+}=}
 \newcommand{\asteq}{\mathrel{*}=}
+\newcommand{\Loss}{L}
 
 \usepackage[dvipsnames]{xcolor}
 \usepackage[many]{tcolorbox}
@@ -64,12 +65,12 @@ Examples of non-linearity functions can be refered below
 \subsubsection{Sigmoid}
 
 \begin{align}
-    \text{sig}(x) = \frac{1}{1+e^{-x}}
+    \sigma(x) = \frac{1}{1+e^{-x}}
 \end{align}
 
 The derivative is:
 \begin{align}
-    \frac{d}{dx}\text{sig}(x) = \text{sig}(x) \cdot (1-\text{sig}(x))
+    \frac{d}{dx}\sigma(x) = \sigma(x) \cdot (1-\sigma(x))
 \end{align}
 
 \subsubsection{Tanh}
@@ -98,11 +99,95 @@ Derivative is:
     \end{cases}
 \end{align}
 
+\newpage
 \section{Backpropagation (lecture 5)}
 
-\begin{tcolorbox}[title=Derivation:,colframe=purple,colback=blue!5!white,arc=0pt,fonttitle=\bfseries]
-    The algebraic system define over operator $\star$ , which is \emph{closed} and \emph{associative} is called SEMIGROUP.
-\end{tcolorbox}
+% \begin{tcolorbox}[title=Derivation:,colframe=purple,colback=blue!5!white,arc=0pt,fonttitle=\bfseries]
+%     The algebraic system define over operator $\star$ , which is \emph{closed} and \emph{associative} is called SEMIGROUP.
+% \end{tcolorbox}
+
+% Multiply all partial derivatives along the path from loss to $w_1$
+
+As an example, we can setup a neural network with a single weight in each layer with no bias term like in \autoref{fig:backprop_network}. In each layer, we pass the dot product of the weight and the input through an activation function. The output is then passed onto the next layer in the network as an input. For example, the output of the first layer is $A_1(W_1 X_1)$, which then becomes the input for the second layer. 
+\begin{figure}[h]
+    \begin{center}
+        \begin{tikzpicture}[scale=0.2]
+        \tikzstyle{every node}+=[inner sep=0pt]
+        \draw [black] (16.1,-24.6) circle (3);
+        \draw (16.1,-24.6) node {$X_1$};
+        \draw [black] (29.7,-24.6) circle (3);
+        \draw (29.7,-24.6) node {$A_1$};
+        \draw [black] (43.3,-24.6) circle (3);
+        \draw (43.3,-24.6) node {$A_2$};
+        \draw [transparent] (29.7,-19.7) circle (3);
+        \draw (29.7,-19.7) node {$A_1(W_1X_1)$};
+        \draw [black] (56.4,-24.6) circle (3);
+        \draw (56.4,-24.6) node {$A_3$};
+        \draw [transparent] (43.3,-19.7) circle (3);
+        \draw (43.3,-19.7) node {$A_2(W_2A_1)$};
+        \draw [transparent] (56.4,-19.7) circle (3);
+        \draw (56.4,-19.7) node {$A_3(W_3A_2)$};
+        \draw [black] (68.5,-24.6) circle (3);
+        \draw (68.5,-24.6) node {$A_4$};
+        \draw [transparent] (68.5,-19.7) circle (3);
+        \draw (68.5,-19.7) node {$A_4(W_4A_3)$};
+        \draw [black] (19.1,-24.6) -- (26.7,-24.6);
+        \fill [black] (26.7,-24.6) -- (25.9,-24.1) -- (25.9,-25.1);
+        \draw (22.9,-25.1) node [below] {$W_1$};
+        \draw [black] (32.7,-24.6) -- (40.3,-24.6);
+        \fill [black] (40.3,-24.6) -- (39.5,-24.1) -- (39.5,-25.1);
+        \draw (36.5,-25.1) node [below] {$W_2$};
+        \draw [black] (46.3,-24.6) -- (53.4,-24.6);
+        \fill [black] (53.4,-24.6) -- (52.6,-24.1) -- (52.6,-25.1);
+        \draw (49.85,-25.1) node [below] {$W_3$};
+        \draw [black] (59.4,-24.6) -- (65.5,-24.6);
+        \fill [black] (65.5,-24.6) -- (64.7,-24.1) -- (64.7,-25.1);
+        \draw (62.45,-25.1) node [below] {$W_4$};
+        \end{tikzpicture}
+    \end{center}
+    \caption{A 4 layer network with a single-weight each layer}
+    \label{fig:backprop_network}
+\end{figure}
+
+where $A$ is an activation function of any kind. Now recall the equation for the gradient descent update step as well as the gradient of loss:
+
+\begin{align}
+    W = W - \alpha \frac{\partial \Loss}{\partial W}
+\end{align}
+
+\begin{align}
+    \nabla_W \text{Loss} = \frac{\partial \Loss}{\partial W} = \left( \frac{\partial \Loss}{\partial w_1},\, \frac{\partial \Loss}{\partial w_2},\, \ldots,\, \frac{\partial \Loss}{\partial w_m} \right)
+\end{align}
+
+Previously, we solved this using the chain rule:
+\begin{align}
+    \frac{\partial L}{\partial W_j} = \frac{\partial \hat{y}}{\partial w_j} \frac{\partial L}{\partial \hat{y}}
+\end{align}
+
+We can extend this chain rule technique and apply it to our network in \autoref{fig:backprop_network}. The idea is to consider all the terms that depend on each other in the network. The reason why we need to do this is because the input of a layer is the output of the previous layer. For example, changing $w_2$ will affect $A_4$, $A_3$, $A_2$ and $L$ so we must consider all these variables when we try to find $\frac{\partial L}{\partial w_2}$. We can do this by multiplying all the partial derivatives along the path from loss to $w_i$:
+
+\begin{align}
+    \frac{\partial L}{\partial w_4} = \color{blue} \frac{\partial L}{\partial A_4} \color{black} \cdot \frac{\partial A_4}{\partial w_4}
+\end{align}
+\begin{align}
+    \frac{\partial L}{\partial w_3} = \color{blue} \frac{\partial L}{\partial A_4} \cdot \frac{\partial A_4}{\partial A_3} \color{black} \cdot \frac{\partial A_3}{\partial w_3}
+\end{align}
+\begin{align}
+    \frac{\partial L}{\partial w_2} = \color{blue} \frac{\partial L}{\partial A_4} \cdot \frac{\partial A_4}{\partial A_3} \cdot \frac{\partial A_3}{\partial A_2} \color{black} \cdot \frac{\partial A_2}{\partial w_2}
+\end{align}
+\begin{align}
+    \frac{\partial L}{\partial w_1} = \color{blue} \frac{\partial L}{\partial A_4} \cdot \frac{\partial A_4}{\partial A_3} \cdot \frac{\partial A_3}{\partial A_2} \cdot \frac{\partial A_2}{\partial A_1} \color{black} \cdot \frac{\partial A_1}{\partial w_1}
+\end{align}
+
+Observe that a lot of the partial derivattives are repeated, as highlighted in blue. 
+
+
+%  This calculation doesn't depend on the other gates in the network, and it doesn't require knowledge of the overall structure of the network. Instead, each gate can compute its local gradient independently and pass it along to the gates that feed into it. This makes backpropagation a highly parallelizable and efficient process.
+
+% Notice that backpropagation is a beautifully local process. Every gate in a circuit diagram gets some inputs and can right away compute two things: 1. its output value and 2. the local gradient of its inputs with respect to its output value. Notice that the gates can do this completely independently without being aware of any of the details of the full circuit that they are embedded in
+
+
+% Vanishing and Exploding gradients
 
 
 \subsection{Code implementation (lecture 6)}

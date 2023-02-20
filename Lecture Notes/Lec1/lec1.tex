@@ -75,14 +75,14 @@ Last Updated: \today}
 \begin{definition}[Model]
 A \emph{model} is some structure that uses parameters to define a function. An example of a model is $y= wx + b$, which is a linear model. In another more explicit notation, we might write a linear model as (refer to \autoref{section:linearconvention} for more info):
 \begin{align}
-    \hat{y} = \sum_{j=1}^{m}{W_j \cdot X_j + b} = XW^{T} + b,
+    \hat{y} = \sum_{j=1}^{m}{w_j \cdot x_j + b} = X \cdot W + b,
 \end{align}
-where we have a weight $W_j$ for each feature $X_j$, a bias term $b$, and an output vector $\hat{y}$. 
+where we have a weight $w_j$ for each feature $x_j$, a bias term $b$, and an output vector $\hat{y}$. 
 \end{definition}
 
-The intuition is that, the parameters (i.e. $W$ and $b$) can be changed based off the data so that the model performs the optimal function/prediction/output. We say that the model learns because it is able learn the right combination of $W$ and $b$ to give an optimal output (global optimality is not guaranteed; we will talk more about this in the next lecture). The weights, $W_j$, determines how important a feature $X_j$ is to the $\hat{y}$. When the parameters of a machine learning model are fixed, the model can be viewed as a function, $F$, of input features $X$:
+The intuition is that, the parameters (i.e. $W$ and $b$) can be changed based off the data so that the model performs the optimal function/prediction/output. We say that the model learns because it is able learn the right combination of $W$ and $b$ to give an optimal output (global optimality is not guaranteed; we will talk more about this in the next lecture). The weights, $w_j$, determines how important a feature $x_j$ is to the $\hat{y}$. When the parameters of a machine learning model are fixed, the model can be viewed as a function, $F$, of input features $X$:
 \begin{align}
-    \hat{y} = F(X_1, ..., X_m) = W_1 X_1 + ... + W_m X_m + b.
+    \hat{y} = F(x_1, ..., x_m) = w_1 \cdot x_1 + ... + w_m \cdot x_m + b.
 \end{align}
 For example, the inputs of a weather model can be the humidity, temperature, air speed, etc., and the output could be \emph{how much} it will rain (a type of model known as a \emph{regression model}) or a probability distribution of \emph{what} the weather will be like (a type of model known as a \emph{classification model}). In a regression model the output $y \in \mathbb{R}$ while the output of a classification model is a probability distribution $Y \sim p(x)$. A classification model with 2 classes is a binary classification model, and a model with 2 or more classes is a multi-class classification model.
 
@@ -95,26 +95,28 @@ D= \left\{(x^{(1)}, y^{(1)}), ..., (x^{(n)}, y^{(n)})\right\},
 where $x^{(i)}$ is the input vector to the $i^{\text{th}}$ sample and $y^{(i)}$ is the corresponding label to the $i^{\text{th}}$ sample\footnote{The reason why we use the $X^{(i)}$ notation is because $X^{(i)}$ is a vector and sometimes we need to refer to the elements of that vector. We also want to use $x^{(i)}$ so that the convention is consistent}. The goal in supervised learning is to learn a function $F$ such that for a new pair of data $(x, y)$, we have $F(x) \approx y$ with high probability \cite{Cornell}.
 \end{definition}
 
-\subsection{Why $\hat{y} = XW^{T} + b$?}
+\subsection{Why $\hat{y} = X \cdot W + b$?}
 
 \resource{If you think you would benefit from a refresher on matrix multiplication, consider this \href{https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:multiplying-matrices-by-matrices/a/multiplying-matrices}{Khan Academy} lesson.}
 \label{section:linearconvention}
+
 Naively, we could implement a linear model using \autoref{alg:linear_model}. 
 \begin{algorithm}
     \caption{Naive Linear Model}
     \begin{algorithmic}[1]
         \State{$\hat{y}=b$}
         \For{$j$ in range($m$)}
-            \State{$\hat{y} \pluseq W_j \ast X_j$} \Comment{scalar multiplication}
+            \State{$\hat{y} \pluseq w_j \cdot x_j$}
         \EndFor
     \end{algorithmic}
     \label{alg:linear_model}
 \end{algorithm}
-However, this is a very ugly implementation and for-loops in Python are slow. For our implementation, it would be better to express the operation using matrices. Generally we want $X$ to have shape $(n \times m)$ where $n$ is the number of data and $m$ is the number of features (i.e each row/data has $m$ features), therefore a $(m \times n)$ shape would not make sense. We also want the output to have shape $(n \times p)$ where $p$ are the predictions (i.e. each row/data has $p$ predictions). The problem with $W^TX$ is that we need to transpose the $X$ matrix which does not make sense to do so:
+
+However, this is a very ugly implementation and for-loops in Python are slow. For our implementation, it would be better to express the operation using matrices. Generally we want $X$ to have shape $(n \times m)$ where $n$ is the number of data and $m$ is the number of features (i.e each row/data has $m$ features), therefore a $(m \times n)$ shape would not make sense. We also want the output to have shape $(n \times p)$ where $p$ are the predictions (i.e. each row/data has $p$ predictions). The problem with $X \cdot W$ is that we need to transpose the $X$ matrix which does not make sense to do so:
 \begin{align}
     (?, ?) \times (n, m) \rightarrow (n, p).
 \end{align}
-Instead, writing it as $XW^T$ makes more sense:
+Instead, writing it as $X \cdot W$ makes more sense:
 \begin{align}
     (n,m) \times (?,?) \rightarrow (n,p),
 \end{align}
@@ -131,7 +133,7 @@ This is the convention used by Pytroch (torch.nn.Linear)\footnote{\url{https://p
 \section{Regression (lecture 1)}
 \begin{definition}[Linear Regression]
 
-If we have a linear model (i.e. $y=XW^T+b$) finding the particular parameters ($W$ and $b$) for this linear function is called \emph{linear regression}. You may recall procedures for finding the line of best fit from a previous course---this is the same process, in an arbitrary dimension.
+If we have a linear model (i.e. $y= X \cdot W + b$) finding the particular parameters ($W$ and $b$) for this linear function is called \emph{linear regression}. You may recall procedures for finding the line of best fit from a previous course---this is the same process, in an arbitrary dimension.
 \end{definition}
 
 \section{Loss Function (lecture 2)}
@@ -149,16 +151,24 @@ where $y^{(n)}$ is the $n^{\text{th}}$ label in the data and $\hat{y}^{(n)}$ is 
 \begin{align}
     \text{MSE($y, \hat{y}$)} = \frac{1}{N}\sum_{n}^{N}{(y^{(n)} - \hat{y}^{(n)})^2}.
 \end{align}
-In general, the line of best fit for the mean absolute error tends to produce models with more outliers than the line of best fit for the mean squared error. It is common practice to normalize the loss by the total number of training samples, $N$, so that the output can be interpreted as the average loss per sample \cite{Cornell}.
-
+In general, the line of best fit for the mean absolute error tends to produce models with more outliers than the line of best fit for the mean squared error. It is common practice to normalize the loss by the total number of training samples, $N$, so that the output can be interpreted as the average loss per sample \cite{Cornell}. The loss function gives us a quantitative way of describing the accuracy of our prediction, as visualized in \autoref{fig:loss_function}.
 \end{definition}
+
+\begin{figure}[h]%
+    \centering
+    {\includegraphics[width=0.5\linewidth]{./Figs/loss_function.png} }
+    \caption{Loss function}%
+    \label{fig:loss_function}%
+\end{figure}
+
+
 % \footnote{https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html}. 
 
 \begin{remark}[Properties of a Loss Function]
 When configuring a machine learning system to solve a problem, one of the most important issues is determining what loss function to use. Here are some important properties for the success of a loss function.
 \begin{enumerate}
     \item The minimum of the loss function should correspond to the line of best fit,
-    \item The loss should be defined for all outputs and labels, and
+    \item The loss should be defined for all outputs,label pairs
     \item The loss function should be differentiable (for gradient descent).
 \end{enumerate}
 
@@ -187,23 +197,23 @@ Clearly, this is an optimization task. The most common tool for finding the opti
 \begin{definition}[Gradient of Loss]
     The \emph{gradient of loss}, $\nabla$Loss, is the \emph{direction of steepest ascent}. The negative gradient of loss, $-\nabla$Loss, is the direction of steepest descent. The gradient of loss with respect to the weight vector can be written as:
     \begin{align}
-        \nabla_W \text{Loss} = \frac{\partial \Loss}{\partial W} = \left( \frac{\partial \Loss}{\partial W_1},\, \frac{\partial \Loss}{\partial W_2},\, \ldots,\, \frac{\partial \Loss}{\partial W_m} \right)
+        \nabla_W \text{Loss} = \frac{\partial \Loss}{\partial W} = \left( \frac{\partial \Loss}{\partial w_1},\, \frac{\partial \Loss}{\partial w_2},\, \ldots,\, \frac{\partial \Loss}{\partial w_m} \right)
     \end{align}
 \end{definition}
 
 \begin{definition}[Gradient Descent]
-    Gradient descent is an optimization algorithm that minimizes the loss $\Loss(W)$. The intuition behind the \emph{gradient descent} algorithm is to iteratively update $W_i$ in the direction of the negative gradient (the direction of steepest descent) until we converge to the weights $W_i$ which minimize the loss function $\Loss(W_i)$, which can be denoted as $W_i^{\ast}$. By multiplying the negative gradient by a sufficiently small number $\alpha$, we can take a step guaranteed to reduce loss. When these steps are taken repeatedly, it is guaranteed that the process will converge to a minimum. The number $\alpha$ is known as the \emph{learning rate}, and is considered a \emph{hyperparameter}; a parameter which is a part of the learning algorithm, but not a part of the model itself. Then, the gradient descent step is: 
+    Gradient descent is an optimization algorithm that minimizes the loss $\Loss(W)$. The intuition behind the \emph{gradient descent} algorithm is to iteratively update $w_i$ in the direction of the negative gradient (the direction of steepest descent) until we converge to the weights $w_i$ which minimize the loss function $\Loss(w_i)$, which can be denoted as $w_i^{\ast}$. By multiplying the negative gradient by a sufficiently small number $\alpha$, we can take a step guaranteed to reduce loss. When these steps are taken repeatedly, it is guaranteed that the process will converge to a minimum. The number $\alpha$ is known as the \emph{learning rate}, and is considered a \emph{hyperparameter}; a parameter which is a part of the learning algorithm, but not a part of the model itself. Then, the gradient descent step is: 
     % I don't think this footnote is necessary 
     %\footnote{For simplicity, we assume that this model has no bias term (i.e. assume that $b = 0$.)}:
     \begin{align}
-        W = W - \alpha \frac{\partial \Loss}{\partial W}
+        W \leftarrow W - \alpha \frac{\partial \Loss}{\partial W}
     \end{align}
     \begin{align}
-        W_{i + 1} = W_{i} - \alpha \frac{\partial \Loss}{\partial W_{i}}
+        W_{i} \leftarrow W_{i} - \alpha \frac{\partial \Loss}{\partial w_{i}}
     \end{align}
 \end{definition}
 
-Both whether a learning algorithm converges and whether it converges to an optimal solution can depend upon the learning rate; if $\alpha$ is too large, as depicted in \autoref{fig:learningrate_example} (a), taking steps in the direction of the negative gradient which are too large can result in moving further and further away from the optimum. A learning algorithm is said to have converged to a solution if the gradient of loss at the current parameters is 0.
+Whether a learning algorithm converges and whether it converges to an optimal solution can depend upon the learning rate; if $\alpha$ is too large, as depicted in \autoref{fig:learningrate_example} (b), taking steps in the direction of the negative gradient which are too large can result in moving further and further away from the optimum. A learning algorithm is said to have converged to a solution if the gradient of loss at the current parameters is 0.
 
 \begin{figure}[h]%
     \centering
@@ -241,7 +251,7 @@ Both whether a learning algorithm converges and whether it converges to an optim
     \url{https://web.archive.org/web/20180827054501/https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote01_MLsetup.html}
      \url{https://web.archive.org/web/20181016051558/https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote07.html}
 
-    \bibitem{Stanford} Fei-Fei Li, Jiajun Wu, and Ruohan Gao, Stanford CS231n, Spring 2022. \url{https://web.archive.org/web/20230109135558/https://cs231n.github.io/optimization-1/}
+    \bibitem{Stanford} Fei-Fei Li, Jiajun Wu, and Ruohan Gao, Stanford CS231n, Spring 2022. \url{https://web.archive.org/web/20230109135558/https://cs231n.github.io/}
 
 \end{thebibliography}
 

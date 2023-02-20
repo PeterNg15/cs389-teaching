@@ -1081,6 +1081,13 @@ INPUT C:\Users\PeterNg\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tcrm1095.tfm
 INPUT C:\Users\PeterNg\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt9.tfm
+INPUT .\Figs\loss_function.png
+INPUT .\Figs\loss_function.png
+INPUT Figs\loss_function.png
+INPUT .\Figs\loss_function.png
+INPUT .\Figs\loss_function.png
+INPUT .\Figs\loss_function.png
+INPUT .\Figs\loss_function.png
 INPUT .\Figs\lr_converge.jpg
 INPUT .\Figs\lr_converge.jpg
 INPUT Figs\lr_converge.jpg

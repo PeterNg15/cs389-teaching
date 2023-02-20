@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1675911493 "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" "lec1.pdf" "lec1" 1675911498
+["pdflatex"] 1676415413 "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" "lec1.pdf" "lec1" 1676415420
   "C:/Users/PeterNg/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1675106754 80937 91001db6d4ae332437b4b739862cda02 ""
   "C:/Users/PeterNg/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1095.pk" 1665032263 12668 cc8ba6d4956b4b86401eb2ef86c85337 ""
   "C:/Users/PeterNg/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1643486774 10244413 6f29d7d7ffced9ecc4d022246ecc2028 ""
@@ -205,12 +205,13 @@
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/tex/latex/trimspaces/trimspaces.sty" 1253165583 1380 971a51b00a14503ddf754cab24c3f209 ""
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1636284872 56029 3f7889dab51d620aa43177c391b7b190 ""
+  "Figs/loss_function.png" 1676355898 8189 6d4db4376939ba5effa7f775b280aed5 ""
   "Figs/lr_converge.jpg" 1675121145 577868 7fa0baaf587da50c03e4f1f8cabeab67 ""
   "Figs/lr_diverge.jpg" 1675121152 326362 d6b5aec7f2a0a81242a039908afe9be3 ""
-  "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" 1675911483 18185 069348438efffa1f2ccc246ac928e722 ""
-  "lec1.aux" 1675911498 2325 d4878b20d4ee44cfee45b52fea0151f4 "pdflatex"
-  "lec1.out" 1675911498 1231 18bc3bc422e206d1a1f380380bb5239d "pdflatex"
-  "lec1.tex" 1675911483 18185 069348438efffa1f2ccc246ac928e722 ""
+  "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec1/lec1.tex" 1676415412 18510 23dee0c4de337484245a25ad86ea25cd ""
+  "lec1.aux" 1676415419 2549 5635129f7e5741616e2476c848bd9b22 "pdflatex"
+  "lec1.out" 1676415419 1234 a5b983af2db2f42f37ac543c1bf38b52 "pdflatex"
+  "lec1.tex" 1676415412 18510 23dee0c4de337484245a25ad86ea25cd ""
   (generated)
   "lec1.aux"
   "lec1.log"

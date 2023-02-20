@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1675819638 "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec2/lec2.tex" "lec2.pdf" "lec2" 1675819641
+["pdflatex"] 1676415425 "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec2/lec2.tex" "lec2.pdf" "lec2" 1676415428
   "C:/Users/PeterNg/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1675106754 80937 91001db6d4ae332437b4b739862cda02 ""
   "C:/Users/PeterNg/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1643486774 10244413 6f29d7d7ffced9ecc4d022246ecc2028 ""
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ectt1000.tfm" 993058740 1348 d70ddf2d5d512b838e50a335e385e919 ""
@@ -184,10 +184,10 @@
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/PeterNg/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1636284872 56029 3f7889dab51d620aa43177c391b7b190 ""
   "Figs/linear_classifer.png" 1675645865 12047 37e8382e8bed165b046b997cf7e77ac3 ""
-  "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec2/lec2.tex" 1675819637 11192 6da0a358366fd5dbdeb1b37dda348848 ""
-  "lec2.aux" 1675819640 2518 be74802fb0d9a6c15a829d021ca0f2bf "pdflatex"
-  "lec2.out" 1675819640 1229 1e8575f9400f0913c5ab46665b89fd5d "pdflatex"
-  "lec2.tex" 1675819637 11192 6da0a358366fd5dbdeb1b37dda348848 ""
+  "d:/School/University/_UCA/cs389/public_repo/Lecture Notes/Lec2/lec2.tex" 1676415418 11580 1dd88b951a7e6f576ac5da87c108396c ""
+  "lec2.aux" 1676415427 2560 56a632de3572c06fd5783281f29ef0a4 "pdflatex"
+  "lec2.out" 1676415427 1229 1e8575f9400f0913c5ab46665b89fd5d "pdflatex"
+  "lec2.tex" 1676415418 11580 1dd88b951a7e6f576ac5da87c108396c ""
   (generated)
   "lec2.aux"
   "lec2.log"

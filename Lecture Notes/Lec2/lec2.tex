@@ -92,7 +92,7 @@ Putting all this together, our multi dimensional data is a matrix with dimension
         \draw [black] (21.5,-30.9) circle (3);
         \draw (21.5,-30.9) node {$X_3$};
         \draw [black] (36.6,-21.9) circle (3);
-        \draw (36.6,-21.9) node {$Y'$};
+        \draw (36.6,-21.9) node {$\hat{y}$};
         \draw [black] (36.6,-30.9) circle (3);
         \draw (36.6,-30.9) node {$b$};
         \draw [black] (36.6,-27.9) -- (36.6,-24.9);
@@ -112,9 +112,9 @@ Putting all this together, our multi dimensional data is a matrix with dimension
     \label{fig:perceptron}
 \end{figure}
 
-where the vertices $X_i$ are the input features, the edges $W_i$ are the weighted connections, the vertex $b$ is the bias term, and the vertex $Y'$ is the output. We can be write this mathematically as:
+where the vertices $X_i$ are the input features, the edges $W_i$ are the weighted connections, the vertex $b$ is the bias term, and the vertex $Y'$ is the output. We can write this mathematically as:
 \begin{align}
-    Y' = \phi(W^{T}X + b)
+    \hat{y} = \phi(W^{T}X + b)
 \end{align}
 
 where $\phi$ is a non-linearity function, also known as an activation function (topic of next week). 
@@ -131,7 +131,7 @@ Recall that a linear model is defined as:
     \hat{y} = \phi \left (\sum_{j=1}^{m}{w_j \cdot X_j + b} \right ) = \phi (W^{T}X + b)
 \end{align}
 % 
-where the output $\hat{y} \in \mathbb{R}$ and we can apply a boolean function (i.e. the \emph{sign} activation function) so that the output $\hat{y} \in \{-1, +1\}$. Given a fixed model, the binary classifier is defined as:
+where the output $\hat{y} \in \mathbb{R}$ and we can apply a type of boolean function (i.e. the \emph{sign} activation function) so that the output $\hat{y} \in \{-1, +1\}$. Given a fixed model, the binary classifier is defined as:
 \begin{align}
     \hat{y} = \text{sign}(W^{T}X + b) = \begin{cases}
         +1 & \text{if $W^{T}X + b > 0$}\\
@@ -176,10 +176,10 @@ Hopefully, we now have a mathematical understanding and an intuition of all the 
     \begin{algorithmic}[1]
         \For{$e$ in range Epoch} \Comment{number of epochs}
             \For{$X^{(i)}$ in $X$} \Comment{loop through entire dataset}
-                \State{$\hat{y}^{(i)} = F_{W}(X^{(i)}) = X^{(i)}W^{T} + b$} \Comment{our model's prediction for input $X^{(i)}$}
-                \State{Loss$^{(i)} =$ MSE$(y^{(i)}, \hat{y}^{(i)}) = \frac{1}{2} \sum{(y^{(i)} - \hat{y}^{(i)})^{2}}$ } \Comment{calculate loss of prediction with actual}
-                \State{$W = W - \alpha \nabla_W \text{Loss}^{(i)} = W - \alpha (X^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}))$}   \Comment{update weight}
-                \State{$b = b - \alpha \nabla_b \text{Loss}^{(i)}$} \Comment{update bias}
+                \State{$\hat{y}^{(i)} = X^{(i)}W^{T} + b$} \Comment{our model's prediction for input $X^{(i)}$}
+                \State{Loss$^{(i)} = \frac{1}{2} \sum{(y^{(i)} - \hat{y}^{(i)})^{2}}$ } \Comment{calculate MSE loss of prediction with actual}
+                \State{$W = W - \alpha \frac{\partial L^{(i)}}{\partial W}$}    \Comment{update weight}
+                \State{$b = b - \alpha \frac{\partial L^{(i)}}{\partial b}$} \Comment{update bias}
             \EndFor
         \EndFor
     \end{algorithmic}
@@ -188,9 +188,9 @@ Hopefully, we now have a mathematical understanding and an intuition of all the 
 % Gradient of loss
 \subsection{Calculating Gradient of Loss}
 
-We define the gradient of loss as $\nabla_W \text{Loss}$, which can also be written as $\frac{\partial L}{\partial W}$, such that: 
+The gradient of loss can be written as $\nabla_W \text{Loss}$ or  $\frac{\partial L}{\partial W}$. The gradient of loss is a vector of partial derivatives. We will often use terms such as “the gradient on x” instead of the technically correct phrase “the partial derivative on x” for simplicity \cite{Stanford}: 
 \begin{align}
-    \nabla_W \text{Loss} = \frac{\partial L}{\partial W} = \left( \frac{\partial L}{\partial W_1}, \frac{\partial L}{\partial W_2}, ..., \frac{\partial L}{\partial W_m} \right)
+    \nabla_W \text{Loss} = \frac{\partial L}{\partial W} = \left( \frac{\partial L}{\partial w_1}, \frac{\partial L}{\partial w_2}, ..., \frac{\partial L}{\partial w_m} \right)
 \end{align}
 Using the chain rule we have:
 \begin{align}
@@ -207,7 +207,7 @@ Now recall that $\hat{y} = W^{T}X + b$ and $L = \frac{1}{2} \sum{(y^{(i)} - \hat
     \nabla_W \text{Loss} = \frac{\partial L}{\partial W} = \left[ X_1^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}), X_2^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}), ..., X_n^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)}) \right]
 \end{align}
 \begin{align}
-    \therefore \nabla_W \text{Loss} = X^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)})
+    \therefore \frac{\partial L}{\partial W} = \left[ X_1^{(i)}, X_2^{(i)}, ..., X_n^{(i)} \right] \cdot (\hat{y}^{(i)}-y^{(i)}) = X^{(i)} \cdot (\hat{y}^{(i)}-y^{(i)})
 \end{align}
 
 
@@ -215,6 +215,8 @@ Now recall that $\hat{y} = W^{T}X + b$ and $L = \frac{1}{2} \sum{(y^{(i)} - \hat
     \bibitem{DrCoop} Cooper.
 
     \bibitem{MIT} {MIT Open Learning Library, 6.036, Spring 2020, \url{https://openlearninglibrary.mit.edu/assets/courseware/v1/2481f8f2964716032b134db99e369b81/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Introduction.pdf}}
+
+    \bibitem{Stanford} Fei-Fei Li, Jiajun Wu, and Ruohan Gao, Stanford CS231n, Spring 2022. \url{https://web.archive.org/web/20230109135558/https://cs231n.github.io/}
 
 \end{thebibliography}
 
