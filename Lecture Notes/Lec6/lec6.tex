@@ -1,0 +1,126 @@
+\documentclass[11pt]{article}
+
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{color,soul}
+\usepackage{mathtools}
+% \usepackage{subfig}
+\usepackage{subcaption}
+\usepackage{caption}
+
+
+% Edits by John:
+% Use hyperref when you're referencing anything - in particular, use the \autoref{} command - it's great. One exception: anything in mathmode should be referenced using \eqref{} instead; \autoref{} calls all mathmode objects "equations", even when they're not equations (definitions, inequalities, propositions, statements, etc.), so it's better to use the \eqref{} function.
+\usepackage[colorlinks, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+% Use the align (or similar) environment, rather than built-in latex commands for math statements. That way, things can be aligned properly and equations will be numbered and referencable. The equation below assigns equation numbers based upon the current section.
+
+\numberwithin{equation}{section}
+% Use the amsthm environents to define theorems, remarks, definitions, etc., with commands of the form \begin{definition}[DEFINITION ITTLE]
+\usepackage{amsthm}% provides the environments
+\theoremstyle{definition}% provides a style for definitions - this affects all downstream \newtheorem statements until \theoremstyle is used again.
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}[section]% numbers definitions within sections
+% The singular of "matrices" is "matrix", not "matrice" - the abnormal singular-plural pair is an importation from Latin.
+% Use \url{} for hyperlinks (I changed the pytorch link). I think this is included in hyperref, but it may be in base LaTeX.
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\asteq}{\mathrel{*}=}
+\newcommand{\Loss}{L}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage[many]{tcolorbox}
+
+\definecolor{lavender}{RGB}{214, 111, 208}
+\colorlet{lavender}{lavender!50}
+
+\newcommand{\hlinfo}[1]{{\sethlcolor{lavender}\hl{#1}}}
+\newcommand{\note}[1]{\textcolor{red}{[#1]}}
+
+\usepackage{tikz}
+
+
+\newcommand{\framedbox}[1]{
+    \noindent{\centering\framebox{\parbox{\linewidth - 0.75em}{#1}}\par}\vspace{0.5ex}
+}
+\newcommand{\resource}[1]{
+\framedbox{\textbf{Resource:} #1}
+}
+
+\def\arraystretch{1.5} % padding table
+
+\setlength\parindent{0pt}
+\font\smallheader=cmr12 at 4pt
+
+
+\begin{document}
+
+\noindent
+\title{Lecture Notes\\\vspace{0em}
+\large Lectures 14, 15, 16, \& 17\\
+\normalsize \emph{CS389: Machine Learning, Spring 2023}\\
+\emph{University of Massachusetts Amherst}
+\date{\smallheader}
+}
+\maketitle
+
+\section{Reinforcement Learning (lecture 14)}
+
+\subsection{Abstract Obverview (What is the goal? and when to use it?)}
+
+Reinforcement learning concern itself with the study of learning and intelligence. Think of how you would train your pet dog (or dragon -- great series) to perform a skill. It is likely that the dog learns through positive or negative reinforcement training from rewards such as treats, praise, toys, etc. \emph{We will formalize this intuition mathetmatically in the following sections}. But before we start, it is important to distinguish between RL and supervised learning. A common misconception is that RL is an alternative to supervised learning. This is possible but should not be done. If you have labels for your data, do not discord them and convert the feedback from instructive feedback (telling the agent what label it should have given) to evaluative feedback (telling the agent if it was right or wrong). It is likely that RL methods will perform far worse so you should only resort to RL when you have a sequential decision problem or a problem where only evaluative feedback is available \cite{Bruno}.
+
+\subsection{Describing the Agent and Environment Mathematically}
+
+On a high level, we want to to find an optimal policy that maximizes the expected total amount of reward the agent will obtain. In order to apply this intuition of learning to our problemss, we need the ability to precisely describe both the agent, environment and their interactions. 
+
+
+To reason about learning, we will need to mat
+
+An example of an \emph{agent} include a child, dog, self-driving car, etc. 
+
+
+
+\subsubsection{Agent's Goal}
+
+
+\subsubsection*{Objective Function}
+
+\subsubsection*{Optimal Policy}
+
+\subsubsection*{Reward Discounting}
+
+\section{Actor-Critic (lecture 15)}
+
+\subsection{Dopamine and TD Error}
+
+\subsection{Value Estimation and TD Error}
+
+\subsection{Policy Gradients}
+
+
+\section{Q-Learning (lecture 16)}
+
+
+\section{Q-Estimation (lecture 17)}
+
+
+\begin{thebibliography}{2}
+    \bibitem{DrCoop} Cooper.
+
+    \bibitem{Stanford} Fei-Fei Li, Jiajun Wu, and Ruohan Gao, Stanford CS231n, Spring 2022. \url{https://web.archive.org/web/20230109135558/https://cs231n.github.io/}
+
+    \bibitem{ActivationGraphs} Graphs of tanh, sigmoid, ReLU. \url{https://studymachinelearning.com/activation-functions-in-neural-network/}
+
+    \bibitem{Bruno} Bruno Castro da Silva and Philip Thomas, COMPSCI 687 Reinforcement Learning Lecture Notes (Fall 2022) \url{https://people.cs.umass.edu/~bsilva/courses/CMPSCI_687/Fall2022/Lecture_Notes_v1.0_687_F22.pdf}
+
+\end{thebibliography}
+
+\end{document}
